@@ -1,6 +1,6 @@
 #ifndef HORARIO_H
 #define HORARIO_H
-
+#include "Graph.h"
 class Horario{
 private:
 
@@ -14,7 +14,7 @@ private:
 
     unsigned int cantidadCursos;
 
-    Grafo<string> * grafo;
+    Graph<string> * grafo;
     string extrarNombreCurso(string nombreCurso){
         size_t pos = nombreCurso.find(":");
         if (pos == string::npos){
