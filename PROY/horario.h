@@ -1,7 +1,5 @@
 #ifndef HORARIO_H
 #define HORARIO_H
-#include "grafo.h"
-#include "curso.h"
 
 class Horario{
 private:
@@ -207,89 +205,16 @@ public:
         return true;
     }
 
-    bool asignarProfesorAlCurso(string nombreCortoCurso, int idProfesor){
-        if (this->cursos.find(nombreCortoCurso) == this->cursos.end()) // Si el curso no existe, devuelve false
-            return false;
-        this->cursos[nombreCortoCurso]->asignarProfesor(idProfesor);
-        return true;
-    }
-
     bool asignarSemestreAlCurso(string nombreCortoCurso, int idSemestre){
-        if (this->cursos.find(nombreCortoCurso) == this->cursos.end()) // Si el curso no existe, devuelve false
+        if (this->cursos.find(nombreCortoCurso) == this->cursos.end()) 
             return false;
         this->cursos[nombreCortoCurso]->asignarSemestre(idSemestre);
         return true;
     }
-
-
-    bool cargarDatos(){
-        this->grafo = new Grafo<string>("horario", true); 
-        map<string, Curso *> nombresCursos;
-        for (auto & curso1: this->cursos){
-            if (curso1.second->profesor == -1 && curso1.second->profesorAsignado.size() > 0){
-                for (auto & profesor: curso1.second->profesorAsignado){
-                    for(auto & tipoGrupo: profesor.second){
-                        string nombreCurso = curso1.first;
-                        if (tipoGrupo.second != "" && tipoGrupo.first != ""){
-                            nombreCurso += ":" + tipoGrupo.second + "-" + tipoGrupo.first;
-                        }else if(tipoGrupo.second != "" && tipoGrupo.first == ""){
-                            nombreCurso += ":" + tipoGrupo.second;
-                        }else if(tipoGrupo.second == "" && tipoGrupo.first != ""){
-                            nombreCurso += "-" + tipoGrupo.first;
-                        }
-                        nombresCursos[nombreCurso] = curso1.second;
-                    }
-                }
-            }else{
-                string nombreCurso = curso1.first;
-                nombresCursos[nombreCurso] = curso1.second;
-            }
-
-        }
-        for (auto & curso: nombresCursos){
-            this->grafo->insertarVertice(curso.first);
-            cout << "CURSO: " << curso.first << endl;
-        }
-        cout << endl;
-
-        for (auto & cursoPivote: nombresCursos){
-            for (auto & curso: nombresCursos){
-                if (cursoPivote.first != curso.first){ 
-                    if (cursoPivote.second->semestre == curso.second->semestre && cursoPivote.second->semestre != -1){
-                        string nombreCursoPivote = this->extrarNombreCurso(cursoPivote.first);
-                        string nombreCurso = this->extrarNombreCurso(curso.first);
-                        char grupoCursoPivote = this->extraerGrupoCurso(cursoPivote.first);
-                        char grupoCurso = this->extraerGrupoCurso(curso.first);
-                        string tipoCursoPivote = this->extraerTipoCurso(cursoPivote.first);
-                        string tipoCurso = this->extraerTipoCurso(curso.first);
-                        if (grupoCursoPivote == grupoCurso && tipoCursoPivote == tipoCurso){
-                            this->grafo->insertarArista(cursoPivote.first, curso.first);
-                        }
-                        if (grupoCursoPivote == ' ' && grupoCurso != ' '){
-                            this->grafo->insertarArista(cursoPivote.first, curso.first);
-                        }
-                        if (tipoCursoPivote == "  " && tipoCurso != "  "){
-                            this->grafo->insertarArista(cursoPivote.first, curso.first);
-                        }   
-                        if (grupoCursoPivote == grupoCurso){
-                            this->grafo->insertarArista(cursoPivote.first, curso.first);
-                        }
-                        if(nombreCursoPivote == nombreCurso && grupoCursoPivote == grupoCurso){
-                            this->grafo->insertarArista(cursoPivote.first, curso.first);
-                        }
-
-                    }
-                    if (cursoPivote.second->profesor == curso.second->profesor && cursoPivote.second->profesor != -1){
-                        this->grafo->insertarArista(cursoPivote.first, curso.first);
-                    }
-
-                }
-            }
-
-        }
-
-        this->grafo->colorearHorario(this->paleta);
-        this->grafo->crearArchivoDot();
+    bool asignarProfesorAlCurso(string nombreCortoCurso, int idProfesor){
+        if (this->cursos.find(nombreCortoCurso) == this->cursos.end())
+            return false;
+        this->cursos[nombreCortoCurso]->asignarProfesor(idProfesor);
         return true;
     }
 };
