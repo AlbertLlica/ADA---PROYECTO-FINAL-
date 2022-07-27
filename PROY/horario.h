@@ -1,6 +1,8 @@
 #ifndef HORARIO_H
 #define HORARIO_H
 #include "Graph.h"
+#include <vector>
+
 class Horario{
 private:
 
