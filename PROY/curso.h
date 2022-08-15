@@ -2,6 +2,8 @@
 #define CURSO_H
 #include "horario.h"
 
+using namespace std;
+
 class Curso{
 private:
     int profesor;
