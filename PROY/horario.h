@@ -1,5 +1,7 @@
 #ifndef HORARIO_H
 #define HORARIO_H
+#include "Graph.h"
+#include <vector>
 
 class Horario{
 private:
@@ -14,7 +16,7 @@ private:
 
     unsigned int cantidadCursos;
 
-    Grafo<string> * grafo;
+    Graph<string> * grafo;
     string extrarNombreCurso(string nombreCurso){
         size_t pos = nombreCurso.find(":");
         if (pos == string::npos){
@@ -216,6 +218,81 @@ public:
             return false;
         this->cursos[nombreCortoCurso]->asignarProfesor(idProfesor);
         return true;
+    }
+    bool cargarDatos(){
+        this->grafo = new Grafo<string>("horario", true); 
+        map<string, Curso *> nombresCursos;
+
+        for (auto & curso1: this->cursos){
+            if (curso1.second->profesor == -1 && curso1.second->profesorAsignado.size() > 0){
+                for (auto & profesor: curso1.second->profesorAsignado){
+                    for(auto & tipoGrupo: profesor.second){
+                        string nombreCurso = curso1.first;
+                        if (tipoGrupo.second != "" && tipoGrupo.first != ""){
+                            nombreCurso += ":" + tipoGrupo.second + "-" + tipoGrupo.first;
+                        }else if(tipoGrupo.second != "" && tipoGrupo.first == ""){
+                            nombreCurso += ":" + tipoGrupo.second;
+                        }else if(tipoGrupo.second == "" && tipoGrupo.first != ""){
+                            nombreCurso += "-" + tipoGrupo.first;
+                        }
+                        nombresCursos[nombreCurso] = curso1.second;
+                    }
+                }
+            }else{
+                string nombreCurso = curso1.first;
+                nombresCursos[nombreCurso] = curso1.second;
+            }
+
+        }
+        
+        Mostrar_Insertar(nombresCursos);
+        
+        for (auto & cursoPivote: nombresCursos){
+            for (auto & curso: nombresCursos){
+                if (cursoPivote.first != curso.first){ // Aseguramos de no crear lazos en el grafo
+                    // Crearmos aristas con los cursos que son del mismo semestre
+                    if (cursoPivote.second->semestre == curso.second->semestre && cursoPivote.second->semestre != -1){
+                        // Pero tenemos que tomar en cuenta que aún siendo del mismo semestre
+                        // pueden ser de diferente grupo y esos no tendrían que tener una arista
+                        string nombreCursoPivote = this->extrarNombreCurso(cursoPivote.first);
+                        string nombreCurso = this->extrarNombreCurso(curso.first);
+                        char grupoCursoPivote = this->extraerGrupoCurso(cursoPivote.first);
+                        char grupoCurso = this->extraerGrupoCurso(curso.first);
+                        string tipoCursoPivote = this->extraerTipoCurso(cursoPivote.first);
+                        string tipoCurso = this->extraerTipoCurso(curso.first);
+
+                        // Si son del mismo grupo y del mismo tipo de curso, no se pueden llevar en simultaneo
+                        // a su vez si no tienen ni tipo ni grupo también se creara aristas
+                        if (grupoCursoPivote == grupoCurso && tipoCursoPivote == tipoCurso){
+                            this->grafo->insertarArista(cursoPivote.first, curso.first);
+                        }
+
+                        // Si no tiene grupo pero el otro curso si lo tiene, entonces se uniran (arista)
+                        if (grupoCursoPivote == ' ' && grupoCurso != ' '){
+                            this->grafo->insertarArista(cursoPivote.first, curso.first);
+                        }
+
+                        // si no tiene tipo y el otro si, entonces se uniran (arista)
+                        if (tipoCursoPivote == "  " && tipoCurso != "  "){
+                            this->grafo->insertarArista(cursoPivote.first, curso.first);
+                        }
+
+                        // LA otra condición es que si tienen el mismo profesor
+                        if (cursoPivote.second->profesor == curso.second->profesor && cursoPivote.second->profesor != -1){
+                            this->grafo->insertarArista(cursoPivote.first, curso.first);
+                        }
+                    }
+
+                }
+            }
+
+        }
+
+        this->grafo->colorearHorario(this->paleta);
+        this->grafo->crearArchivoDot();
+
+        return true;
+
     }
 };
 
