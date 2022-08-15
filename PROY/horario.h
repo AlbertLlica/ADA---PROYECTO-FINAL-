@@ -3,6 +3,8 @@
 #include "Graph.h"
 #include <bits/stdc++.h>
 #include <map>
+#include <vector>
+
 
 class Horario{
 private:
