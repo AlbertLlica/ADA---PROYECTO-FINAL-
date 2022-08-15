@@ -109,6 +109,54 @@ public:
         return -1;
     }
 
+    int asignarProfesorAlTipoYgrupo(int idProfesor, string tipoCurso, string grupoCurso)
+    {
+        this->profesor = -1;
+        int posAsignado = this->buscarAsignacionProfesor(idProfesor, tipoCurso, grupoCurso);
+        if (posAsignado < 0){
+            pair<string, string> tipoGrupoAsignado(tipoCurso, grupoCurso);
+            this->profesorAsignado[idProfesor].push_back(tipoGrupoAsignado);
+            if (this->encontrarTipoCurso(tipoCurso) < 0){
+                this->tiposCursos.push_back(tipoCurso);
+            }
+            if (this->encontrarGrupoCurso(grupoCurso) < 0){
+                this->gruposCursos.push_back(grupoCurso);
+            }
+            return this->profesorAsignado[idProfesor].size() - 1;
+        }
+        return posAsignado;
+    }
+    
+    int asignarProfesorSoloAlTipo(int idProfesor, string tipoCurso)
+    {
+        this->profesor = -1;
+        int posAsignado = this->buscarAsignacionProfesor(idProfesor, tipoCurso, "");
+        if (posAsignado < 0){
+            pair<string, string> tipoGrupoAsignado(tipoCurso, "");
+            this->profesorAsignado[idProfesor].push_back(tipoGrupoAsignado);
+            if (this->encontrarTipoCurso(tipoCurso) < 0){
+                this->tiposCursos.push_back(tipoCurso);
+            }
+            return this->profesorAsignado[idProfesor].size() - 1;
+        }
+        return posAsignado;
+    }
+
+    int asignarProfesorSoloAlGrupo(int idProfesor, string grupoCurso)
+    {
+        this->profesor = -1;
+        int posAsignado = this->buscarAsignacionProfesor(idProfesor, "", grupoCurso);
+        if (posAsignado < 0){
+            pair<string, string> tipoGrupoAsignado("", grupoCurso);
+            this->profesorAsignado[idProfesor].push_back(tipoGrupoAsignado);
+            if (this->encontrarGrupoCurso(grupoCurso) < 0){
+                this->gruposCursos.push_back(grupoCurso);
+            }
+            return this->profesorAsignado[idProfesor].size() - 1;
+        }
+        return posAsignado;
+    }
+    
     friend class Horario;
 };
 
