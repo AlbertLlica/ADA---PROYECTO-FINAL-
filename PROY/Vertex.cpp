@@ -1,23 +1,23 @@
 #include "Vertex.h"
 
-Vertex::Vertex(char value)
+Vertex::Vertex(Curso course)
 {
-    this->value = value;
+    this->course = course;
     this->color = Color::nocolor;
-    this->connections = 0;
+    this->order = 0;
 }
 
-char Vertex::get_value()
+Curso Vertex::get_course()
 {
-    return this->value;
+    return this->course;
 }
 
-void Vertex::increase_connection()
+void Vertex::increase_order()
 {
-    this->connections++;
+    this->order++;
 }
 
-int Vertex::get_connections() const
+int Vertex::get_order() const
 {
-    return this->connections;
+    return this->order;
 }

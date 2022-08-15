@@ -16,13 +16,13 @@ Graph::~Graph()
 
 }
 
-void Graph::insert_vertex(char value)
+void Graph::insert_vertex(Curso value)
 {
     this->vertices.push_back(Vertex(value));
     this->size++;
 }
 
-void Graph::insert_edge(char a, char b)
+void Graph::insert_edge(Curso a, Curso b)
 {
     Vertex * v1 = this->get_vertex(a);
     Vertex * v2 = this->get_vertex(b);
@@ -33,15 +33,15 @@ void Graph::insert_edge(char a, char b)
         v2->edge_list.push_back(Edge(v1));
     }
 
-    v1->increase_connection();
-    v2->increase_connection();
+    v1->increase_order();
+    v2->increase_order();
 }
 
-Vertex * Graph::get_vertex(char value)
+Vertex * Graph::get_vertex(Curso course)
 {
     for (std::list<Vertex>::iterator i = this->vertices.begin(); i != this->vertices.end(); ++i)
     {
-        if (i->get_value() == value)
+        if (i->get_course() == course)
         {
             return &(*i);
         }
@@ -51,7 +51,7 @@ Vertex * Graph::get_vertex(char value)
 
 bool sort_by_connections(const Vertex & v1, const Vertex & v2)
 {
-    return v1.get_connections() <= v2.get_connections();
+    return v1.get_order() <= v2.get_order();
 }
 
 /*
@@ -80,7 +80,7 @@ void Graph::colorize()
             {
                 for (std::vector<Vertex*>::iterator it2 = restricted_vertices.begin(); it2 != restricted_vertices.end(); ++it2)
                 {
-                    if ((*it2)->get_value() == (*it).get_value())
+                    if ((*it2)->get_course() == (*it).get_course())
                     {
                         flag = false;
                         break;
@@ -110,7 +110,7 @@ void Graph::print_to_console()
 {
     for (std::list<Vertex>::iterator it = this->vertices.begin(); it != this->vertices.end(); ++it)
     {
-        std::cout << it->get_value() << " : ";
+        std::cout << it->get_course().nombreCurso << " : ";
         switch(it->color)
         {
         case Color::red:
@@ -156,7 +156,7 @@ void Graph::print_to_console()
         std::cout << " ::= ";
         for (std::list<Edge>::iterator it2 = it->edge_list.begin(); it2 != it->edge_list.end(); ++it2)
         {
-            std::cout << it2->get_vertex()->value << ", ";
+            std::cout << it2->get_vertex()->course.nombreCurso << ", ";
         }
         std::cout << '\n';
     }
@@ -169,14 +169,14 @@ void Graph::save_ostream(std::ostream & o)
     {
         for (const auto &edge : vertex.edge_list)
         {
-            o << '\"' << vertex.value << '\"' << "--" << '\"' << edge.get_vertex()->value << '\"' << ";\n";
+            o << '\"' << vertex.course.nombreCurso << '\"' << "--" << '\"' << edge.get_vertex()->course.nombreCurso << '\"' << ";\n";
         }
 
     }
 
     for (const auto &vertex : this->vertices)
     {
-        o << '\"' << vertex.value << '\"' << " [fillcolor=";
+        o << '\"' << vertex.course.nombreCurso << '\"' << " [fillcolor=";
         switch(vertex.color)
         {
         case Color::red:

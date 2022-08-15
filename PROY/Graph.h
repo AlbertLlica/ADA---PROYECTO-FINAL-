@@ -11,19 +11,20 @@ para ser coloreado con el algoritmo de Welsh Powell.
 #include <string>
 class Graph
 {
-private:
+public:
     std::list<Vertex> vertices;
     int size;
     int chromatic_number;
     friend class Vertex;
     friend class Edge;
+    friend class Curso;
 public:
     Graph();
 
-    void insert_vertex(char a);
-    void insert_edge(char a, char b);
+    void insert_vertex(Curso a);
+    void insert_edge(Curso a, Curso b);
 
-    Vertex * get_vertex(char value);
+    Vertex * get_vertex(Curso value);
 
     void colorize(); // Alogritmo Welsh Powell para colorear el grafo
 

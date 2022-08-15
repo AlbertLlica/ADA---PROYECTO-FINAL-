@@ -1,22 +1,40 @@
 #ifndef CURSO_H
 #define CURSO_H
 #include "horario.h"
+#include <map>
 
 using namespace std;
 
 class Curso{
-private:
+public:
     int profesor;
     int semestre;
     string nombreCurso;
     string nombreLargoCurso;
 
-    map<int, vector<pair<string, string>>> profesorAsignado;
+    std::map<int, vector<pair<string, string>>> profesorAsignado;
     vector<string> tiposCursos;
     vector<string> gruposCursos;
 
-public:
+    friend class Graph;
 
+public:
+    Curso()
+    {
+        this->nombreCurso = "NA";
+        this->nombreLargoCurso = "NAA";
+        this->semestre = -1;
+        this->profesor = -1;
+    }
+    bool operator==(const Curso c1)
+    {
+        if(this->nombreCurso == c1.nombreCurso)
+        {
+            return true;
+        }
+        else
+            return false;
+    }
     Curso(string nombreCorto)
     {
         this->nombreCurso = nombreCorto;

@@ -3,7 +3,7 @@
 
 #include <list>
 #include "Edge.h"
-
+#include "curso.h"
 enum Color
 {
     nocolor,
@@ -24,17 +24,17 @@ enum Color
 class Vertex
 {
 public:
-    char value;
-    int connections; // Orden
+    Curso course;
+    int order; // Orden
     Color color;
     std::list<Edge> edge_list;
 public:
-    char get_value();
-    Vertex(char);
+    Curso get_course();
+    Vertex(Curso);
     
-    void increase_connection();
+    void increase_order();
 
-    int get_connections() const; 
+    int get_order() const; 
 
 
 };
