@@ -1,7 +1,8 @@
 #ifndef HORARIO_H
 #define HORARIO_H
 #include "Graph.h"
-#include <vector>
+#include <bits/stdc++.h>
+#include <map>
 
 class Horario{
 private:
