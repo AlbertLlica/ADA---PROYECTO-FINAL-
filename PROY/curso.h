@@ -1,23 +1,20 @@
 #ifndef CURSO_H
 #define CURSO_H
-#include "horario.h"
-#include <map>
 
-using namespace std;
+#include <bits/stdc++.h>
 
 class Curso{
 public:
     int profesor;
     int semestre;
-    string nombreCurso;
-    string nombreLargoCurso;
+    std::string nombreCurso;
+    std::string nombreLargoCurso;
 
-    std::map<int, vector<pair<string, string>>> profesorAsignado;
-    vector<string> tiposCursos;
-    vector<string> gruposCursos;
+    std::map<int, std::vector<std::pair<std::string, std::string>>> profesorAsignado;
+    std::vector<std::string> tiposCursos;
+    std::vector<std::string> gruposCursos;
 
     friend class Graph;
-
 public:
     Curso()
     {
@@ -35,28 +32,28 @@ public:
         else
             return false;
     }
-    Curso(string nombreCorto)
+    Curso(std::string nombreCorto)
     {
         this->nombreCurso = nombreCorto;
         this->nombreLargoCurso = "";
         this->semestre = -1;
         this->profesor = -1;
     }
-    Curso(string nombreCorto, int idSemestre)
+    Curso(std::string nombreCorto, int idSemestre)
     {
         this->nombreCurso = nombreCorto;
         this->semestre = idSemestre;
         this->nombreLargoCurso = "";
         this->profesor = -1;
     }
-    Curso(string nombreCorto, string nombreCompleto)
+    Curso(std::string nombreCorto, std::string nombreCompleto)
     {
         this->nombreCurso = nombreCorto;
         this->nombreLargoCurso = nombreCompleto;
         this->semestre = -1;
         this->profesor = -1;
     }
-    Curso(string nombreCorto, string nombreCompleto, int idSemestre)
+    Curso(std::string nombreCorto, std::string nombreCompleto, int idSemestre)
     {
         this->nombreCurso = nombreCorto;
         this->nombreLargoCurso = nombreCompleto;
@@ -74,7 +71,7 @@ public:
         return this->semestre = idSemestre;
     }
 
-    int buscarAsignacionProfesor(int idProfesor, string tipoCurso, string grupoCurso)
+    int buscarAsignacionProfesor(int idProfesor, std::string tipoCurso, std::string grupoCurso)
     {
         if (this->profesorAsignado.find(idProfesor) == this->profesorAsignado.end()) 
             return -1;
@@ -87,33 +84,33 @@ public:
 
     void mostrarValores()
     {
-        cout << endl;
-        cout << "NOMBRE CORTO: " << this->nombreCurso << endl;
-        cout << "NOMBRE LARGO: " << this->nombreLargoCurso << endl;
-        cout << "ID PROFESOR: " << this->profesor << endl;
-        cout << "NUMERO DE SEMESTRE: " << this->semestre << endl;
-        cout << "TIPOS CREADOS: ";
+        std::cout << std::endl;
+        std::cout << "NOMBRE CORTO: " << this->nombreCurso << std::endl;
+        std::cout << "NOMBRE LARGO: " << this->nombreLargoCurso << std::endl;
+        std::cout << "ID PROFESOR: " << this->profesor << std::endl;
+        std::cout << "NUMERO DE SEMESTRE: " << this->semestre << std::endl;
+        std::cout << "TIPOS CREADOS: ";
         for(auto & tipo: this->tiposCursos){
-            cout << tipo << ", ";
+            std::cout << tipo << ", ";
         }
-        cout << endl;
-        cout << "GRUPOS CREADOS: ";
+        std::cout << std::endl;
+        std::cout << "GRUPOS CREADOS: ";
         for(auto & grupo: this->gruposCursos){
-            cout << grupo << ", ";
+            std::cout << grupo << ", ";
         }
-        cout << endl;
-        cout << "PROFESOR ASIGNADO A: " << endl;
+        std::cout << std::endl;
+        std::cout << "PROFESOR ASIGNADO A: " << std::endl;
         for (auto & profesor: this->profesorAsignado){
-            cout << "\t" << profesor.first << " = ";
+            std::cout << "\t" << profesor.first << " = ";
             for (auto & asignado: profesor.second){
-                cout << "(" << asignado.first << "-" << asignado.second << "), ";
+                std::cout << "(" << asignado.first << "-" << asignado.second << "), ";
             }
-            cout << endl;
+            std::cout << std::endl;
         }
-        cout << endl;
+        std::cout << std::endl;
     }
 
-    int encontrarTipoCurso(string tipoCurso)
+    int encontrarTipoCurso(std::string tipoCurso)
     {
         for (int idx = 0; idx < this->tiposCursos.size(); idx++)
             if (this->tiposCursos[idx] == tipoCurso)
@@ -121,7 +118,7 @@ public:
         return -1;
     }
 
-    int encontrarGrupoCurso(string grupoCurso)
+    int encontrarGrupoCurso(std::string grupoCurso)
     {
         for(int idx = 0; idx < this->gruposCursos.size(); idx++)
             if (this->gruposCursos[idx] == grupoCurso)
@@ -129,12 +126,12 @@ public:
         return -1;
     }
 
-    int asignarProfesorAlTipoYgrupo(int idProfesor, string tipoCurso, string grupoCurso)
+    int asignarProfesorAlTipoYgrupo(int idProfesor, std::string tipoCurso, std::string grupoCurso)
     {
         this->profesor = -1;
         int posAsignado = this->buscarAsignacionProfesor(idProfesor, tipoCurso, grupoCurso);
         if (posAsignado < 0){
-            pair<string, string> tipoGrupoAsignado(tipoCurso, grupoCurso);
+            std::pair<std::string, std::string> tipoGrupoAsignado(tipoCurso, grupoCurso);
             this->profesorAsignado[idProfesor].push_back(tipoGrupoAsignado);
             if (this->encontrarTipoCurso(tipoCurso) < 0){
                 this->tiposCursos.push_back(tipoCurso);
@@ -147,12 +144,12 @@ public:
         return posAsignado;
     }
     
-    int asignarProfesorSoloAlTipo(int idProfesor, string tipoCurso)
+    int asignarProfesorSoloAlTipo(int idProfesor, std::string tipoCurso)
     {
         this->profesor = -1;
         int posAsignado = this->buscarAsignacionProfesor(idProfesor, tipoCurso, "");
         if (posAsignado < 0){
-            pair<string, string> tipoGrupoAsignado(tipoCurso, "");
+            std::pair<std::string, std::string> tipoGrupoAsignado(tipoCurso, "");
             this->profesorAsignado[idProfesor].push_back(tipoGrupoAsignado);
             if (this->encontrarTipoCurso(tipoCurso) < 0){
                 this->tiposCursos.push_back(tipoCurso);
@@ -162,12 +159,12 @@ public:
         return posAsignado;
     }
 
-    int asignarProfesorSoloAlGrupo(int idProfesor, string grupoCurso)
+    int asignarProfesorSoloAlGrupo(int idProfesor, std::string grupoCurso)
     {
         this->profesor = -1;
         int posAsignado = this->buscarAsignacionProfesor(idProfesor, "", grupoCurso);
         if (posAsignado < 0){
-            pair<string, string> tipoGrupoAsignado("", grupoCurso);
+            std::pair<std::string, std::string> tipoGrupoAsignado("", grupoCurso);
             this->profesorAsignado[idProfesor].push_back(tipoGrupoAsignado);
             if (this->encontrarGrupoCurso(grupoCurso) < 0){
                 this->gruposCursos.push_back(grupoCurso);
@@ -176,8 +173,6 @@ public:
         }
         return posAsignado;
     }
-    
-    friend class Horario;
 };
 
 #endif // CURSO_H

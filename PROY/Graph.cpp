@@ -18,6 +18,7 @@ Graph::~Graph()
 
 void Graph::insert_vertex(Curso value)
 {
+    if (this->get_vertex(value)) return;
     this->vertices.push_back(Vertex(value));
     this->size++;
 }
@@ -26,6 +27,17 @@ void Graph::insert_edge(Curso a, Curso b)
 {
     Vertex * v1 = this->get_vertex(a);
     Vertex * v2 = this->get_vertex(b);
+
+    if (v1)
+    {
+        for (auto e : v1->edge_list)
+        {
+            if (e.get_vertex()->course.nombreCurso == b.nombreCurso)
+            {
+                return;
+            }
+        }
+    }
 
     if (v1 && v2) 
     {
@@ -164,19 +176,9 @@ void Graph::print_to_console()
 
 void Graph::save_ostream(std::ostream & o)
 {
-
     for (const auto &vertex : this->vertices)
     {
-        for (const auto &edge : vertex.edge_list)
-        {
-            o << '\"' << vertex.course.nombreCurso << '\"' << "--" << '\"' << edge.get_vertex()->course.nombreCurso << '\"' << ";\n";
-        }
-
-    }
-
-    for (const auto &vertex : this->vertices)
-    {
-        o << '\"' << vertex.course.nombreCurso << '\"' << " [fillcolor=";
+        o << '\t' << vertex.course.nombreCurso  << " [fillcolor=";
         switch(vertex.color)
         {
         case Color::red:
@@ -219,16 +221,28 @@ void Graph::save_ostream(std::ostream & o)
             o << "Sin color";
             break;
         }
-        o << ", style=filled];\n";
+        o << ", style=filled]\n";
     }
+
+    for (const auto &vertex : this->vertices)
+    {
+        for (const auto &edge : vertex.edge_list)
+        {
+            o << '\t' << vertex.course.nombreCurso  << " -- " << edge.get_vertex()->course.nombreCurso << '\n';
+        }
+
+    }
+
+    
 }
 
 void Graph::show_dot(std::string filename)
 {
     std::ofstream file;
-    file.open("Graphviz\\bin\\" + filename + ".dot");
-    file << "graph Z {";
+    file.open(filename + ".dot");
+    file << "strict graph Z {\n";
     this->save_ostream(file);
     file << "}";
-    system("cd Graphviz\\bin && dot -Tpng grafo.dot -o grafo.png");
+    file.close();
+    system("dot -Tpng grafo.dot -o grafo.png");
 }

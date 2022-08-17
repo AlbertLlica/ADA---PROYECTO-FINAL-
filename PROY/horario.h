@@ -5,30 +5,29 @@
 #include <map>
 #include <vector>
 
-
 class Horario{
 private:
 
-    vector<int> paleta;
-    vector<string> grupos; 
-    vector<string> tiposDeCursos;   
-    vector<string> semestres;
-    vector<string> profesores;
+    std::vector<int> paleta;
+    std::vector<std::string> grupos; 
+    std::vector<std::string> tiposDeCursos;   
+    std::vector<std::string> semestres;
+    std::vector<std::string> profesores;
 
-    map<string, Curso *> cursos;
+    std::map<std::string, Curso *> cursos;
 
     unsigned int cantidadCursos;
 
-    Graph<string> * grafo;
-    string extrarNombreCurso(string nombreCurso){
+    Graph grafo;
+    std::string extrarNombreCurso(std::string nombreCurso){
         size_t pos = nombreCurso.find(":");
-        if (pos == string::npos){
+        if (pos == std::string::npos){
             pos = nombreCurso.find("-");
-            if (pos == string::npos)
+            if (pos == std::string::npos)
                 return nombreCurso;
         }
 
-        string soloNombre = "";
+        std::string soloNombre = "";
         for (size_t i = 0; i < pos; i++){
             soloNombre += nombreCurso[i];
         }
@@ -36,73 +35,72 @@ private:
         return soloNombre;
     }
 
-    char extraerGrupoCurso(string nombreCurso){
-        size_t pos = nombreCurso.find(":");
-        if (pos == string::npos)
+    char extraerGrupoCurso(std::string nombreCurso){
+        std::size_t pos = nombreCurso.find(":");
+        if (pos == std::string::npos)
             return ' ';
 
         return nombreCurso[pos + 1];
     }
 
-    string extraerTipoCurso(string nombreCurso){
+    std::string extraerTipoCurso(std::string nombreCurso){
         size_t pos = nombreCurso.find("-");
-        if (pos == string::npos)
+        if (pos == std::string::npos)
             return "  ";
 
         return nombreCurso.substr(pos + 1, 2);
     }
 
 public:
-    Horario(vector<int> paleta){
-        this->grafo = nullptr;
+    Horario(){
+        //this->grafo = nullptr;
         this->cantidadCursos = 0;
-        this->paleta = paleta;
     }
 
-    bool crearCurso(string nombreCorto){
+    bool crearCurso(std::string nombreCorto){
         this->cursos[nombreCorto] = new Curso(nombreCorto);
         this->cantidadCursos++;
         return true;
     }
 
-    bool crearCurso(string nombreCorto, string nombreLargo){
+    bool crearCurso(std::string nombreCorto, std::string nombreLargo){
         this->cursos[nombreCorto] = new Curso(nombreCorto, nombreLargo);
         this->cantidadCursos++;
         return true;
     }
 
-    bool existeCurso(string nombreCortoCurso){
+    bool existeCurso(std::string nombreCortoCurso){
         return !(this->cursos.find(nombreCortoCurso) == this->cursos.end());
     }
 
     void mostrarInfoHorario(){
-        cout << "-------- SEMESTRES ---------" << endl;
+        std::cout << "-------- SEMESTRES ---------" << std::endl;
         for (auto & semestre: this->semestres){
-            cout << semestre << ", ";
+            std::cout << semestre << ", ";
         }
-        cout << endl << endl;
-        cout << "----- TIPOS DE CURSOS ------" << endl;
+        std::cout << std::endl << std::endl;
+        std::cout << "----- TIPOS DE CURSOS ------" << std::endl;
         for (auto & tipos: this->tiposDeCursos){
-            cout << tipos << ", ";
+            std::cout << tipos << ", ";
         }
-        cout << endl << endl;
-        cout << "---------- GRUPOS ----------" << endl;
+        std::cout << std::endl << std::endl;
+        std::cout << "---------- GRUPOS ----------" << std::endl;
         for (auto & grupo: this->grupos){
-            cout << grupo << ", ";
+            std::cout << grupo << ", ";
         }
-        cout << endl << endl;
-        cout << "-------- PROFESORES --------" << endl;
+        std::cout << std::endl << std::endl;
+        std::cout << "-------- PROFESORES --------" << std::endl;
         for (auto & profesor: this->profesores){
-            cout << profesor << ", ";
+            std::cout << profesor << ", ";
         }
-        cout << endl << endl;
-        cout << "---------- CURSOS ----------" << endl;
+        std::cout << std::endl << std::endl;
+        std::cout << "---------- CURSOS ----------" << std::endl;
         for(auto & curso: this->cursos){
             curso.second->mostrarValores();
         }
     }
 
-    int encontrarSemestre(string nombreSemestre){
+    int encontrarSemestre(std::string nombreSemestre){
         for (int i = 0; i < this->semestres.size(); i++){
             if (this->semestres[i] == nombreSemestre)
                 return i;
@@ -110,7 +108,7 @@ public:
         return -1;
     }
 
-    int encontrarProfesor(string nombreProfesor){
+    int encontrarProfesor(std::string nombreProfesor){
         for (int i = 0; i < this->profesores.size(); i++){
             if (this->profesores[i] == nombreProfesor)
                 return i;
@@ -118,7 +116,7 @@ public:
         return -1;
     }
 
-    int encontrarGrupo(string nombreGrupo){
+    int encontrarGrupo(std::string nombreGrupo){
         for (int i = 0; i < this->grupos.size(); i++){
             if (this->grupos[i] == nombreGrupo)
                 return i;
@@ -126,7 +124,7 @@ public:
         return -1;
     }
 
-    int encontrarTipo(string nombreTipo){
+    int encontrarTipo(std::string nombreTipo){
         for (int i = 0; i < this->tiposDeCursos.size(); i++){
             if (this->tiposDeCursos[i] == nombreTipo)
                 return i;
@@ -134,7 +132,7 @@ public:
         return -1;
     }
 
-    int crearProfesor(string nombreProfesor){
+    int crearProfesor(std::string nombreProfesor){
         int idProfesor = this->encontrarProfesor(nombreProfesor);
         if (idProfesor < 0){
             this->profesores.push_back(nombreProfesor);
@@ -143,7 +141,7 @@ public:
         return idProfesor;
     }
 
-    int crearSemestre(string nombreSemestre){
+    int crearSemestre(std::string nombreSemestre){
         int idSemestre = this->encontrarSemestre(nombreSemestre);
         if (idSemestre < 0){
             this->semestres.push_back(nombreSemestre);
@@ -152,7 +150,7 @@ public:
         return idSemestre;
     }
 
-    int crearGrupo(string nombreGrupo){
+    int crearGrupo(std::string nombreGrupo){
         int idGrupo = this->encontrarGrupo(nombreGrupo);
         if (idGrupo < 0){
             this->grupos.push_back(nombreGrupo);
@@ -161,7 +159,7 @@ public:
         return idGrupo;
     }
 
-    int crearTipoCurso(string nombreCortoTipo){
+    int crearTipoCurso(std::string nombreCortoTipo){
         int idTipoCurso = this->encontrarTipo(nombreCortoTipo);
         if (idTipoCurso < 0){
             this->tiposDeCursos.push_back(nombreCortoTipo);
@@ -171,14 +169,14 @@ public:
     }
 
 
-    bool asignarProfesorAlCurso(string nombreCortoCurso, string nombreProfesor){
+    bool asignarProfesorAlCurso(std::string nombreCortoCurso, std::string nombreProfesor){
         if (this->cursos.find(nombreCortoCurso) == this->cursos.end())
             return false;
-        this->cursos[nombreCortoCurso]->asignarProfesor(this->crearProfesor(nombreProfesor));
+        this->cursos[nombreCortoCurso]->asignaridProfesor(this->crearProfesor(nombreProfesor));
         return true;
     }
 
-    bool asignarProfesorAtipoYgrupo(string nombreCortoCurso, string nombreTipo, string nombreGrupo, string nombreProfesor){
+    bool asignarProfesorAtipoYgrupo(std::string nombreCortoCurso, std::string nombreTipo, std::string nombreGrupo, std::string nombreProfesor){
         if (!this->existeCurso(nombreCortoCurso)) return false;
         if (nombreTipo.length() < 1){
             if (this->cursos[nombreCortoCurso]->asignarProfesorSoloAlGrupo(this->crearProfesor(nombreProfesor), nombreGrupo) >= 0){
@@ -193,7 +191,7 @@ public:
             }
             return false;
         }else{
-            cout << "# INSERTANDO AMBOS GRUPOS" << endl;
+            std::cout << "# INSERTANDO AMBOS GRUPOS" << std::endl;
             if (this->cursos[nombreCortoCurso]->asignarProfesorAlTipoYgrupo(this->crearProfesor(nombreProfesor), nombreTipo, nombreGrupo) >= 0){
                 this->crearGrupo(nombreGrupo);
                 this->crearTipoCurso(nombreTipo);
@@ -203,34 +201,40 @@ public:
         }
     }
 
-    bool asignarSemestreAlCurso(string nombreCortoCurso, string nombreSemestre){
+    bool asignarSemestreAlCurso(std::string nombreCortoCurso, std::string nombreSemestre){
         if (this->cursos.find(nombreCortoCurso) == this->cursos.end())
             return false;
-        this->cursos[nombreCortoCurso]->asignarSemestre(this->crearSemestre(nombreSemestre));
+        this->cursos[nombreCortoCurso]->asignaridSemestre(this->crearSemestre(nombreSemestre));
         return true;
     }
 
-    bool asignarSemestreAlCurso(string nombreCortoCurso, int idSemestre){
+    bool asignarSemestreAlCurso(std::string nombreCortoCurso, int idSemestre){
         if (this->cursos.find(nombreCortoCurso) == this->cursos.end()) 
             return false;
-        this->cursos[nombreCortoCurso]->asignarSemestre(idSemestre);
+        this->cursos[nombreCortoCurso]->asignaridSemestre(idSemestre);
         return true;
     }
-    bool asignarProfesorAlCurso(string nombreCortoCurso, int idProfesor){
+    bool asignarProfesorAlCurso(std::string nombreCortoCurso, int idProfesor){
         if (this->cursos.find(nombreCortoCurso) == this->cursos.end())
             return false;
-        this->cursos[nombreCortoCurso]->asignarProfesor(idProfesor);
+        this->cursos[nombreCortoCurso]->asignaridProfesor(idProfesor);
         return true;
     }
+
+    void Mostrar_Insertar(std::map<std::string,Curso*> nombresCursos){
+    for (auto & curso: nombresCursos){
+        this->grafo.insert_vertex(*(curso.second));
+        std::cout << "CURSO: " << curso.first << std::endl;
+    }
+}
     bool cargarDatos(){
-        this->grafo = new Grafo<string>("horario", true); 
-        map<string, Curso *> nombresCursos;
+        std::map<std::string, Curso *> nombresCursos;
 
         for (auto & curso1: this->cursos){
             if (curso1.second->profesor == -1 && curso1.second->profesorAsignado.size() > 0){
                 for (auto & profesor: curso1.second->profesorAsignado){
                     for(auto & tipoGrupo: profesor.second){
-                        string nombreCurso = curso1.first;
+                        std::string nombreCurso = curso1.first;
                         if (tipoGrupo.second != "" && tipoGrupo.first != ""){
                             nombreCurso += ":" + tipoGrupo.second + "-" + tipoGrupo.first;
                         }else if(tipoGrupo.second != "" && tipoGrupo.first == ""){
@@ -242,7 +246,7 @@ public:
                     }
                 }
             }else{
-                string nombreCurso = curso1.first;
+                std::string nombreCurso = curso1.first;
                 nombresCursos[nombreCurso] = curso1.second;
             }
 
@@ -257,32 +261,32 @@ public:
                     if (cursoPivote.second->semestre == curso.second->semestre && cursoPivote.second->semestre != -1){
                         // Pero tenemos que tomar en cuenta que aún siendo del mismo semestre
                         // pueden ser de diferente grupo y esos no tendrían que tener una arista
-                        string nombreCursoPivote = this->extrarNombreCurso(cursoPivote.first);
-                        string nombreCurso = this->extrarNombreCurso(curso.first);
+                        std::string nombreCursoPivote = this->extrarNombreCurso(cursoPivote.first);
+                        std::string nombreCurso = this->extrarNombreCurso(curso.first);
                         char grupoCursoPivote = this->extraerGrupoCurso(cursoPivote.first);
                         char grupoCurso = this->extraerGrupoCurso(curso.first);
-                        string tipoCursoPivote = this->extraerTipoCurso(cursoPivote.first);
-                        string tipoCurso = this->extraerTipoCurso(curso.first);
+                        std::string tipoCursoPivote = this->extraerTipoCurso(cursoPivote.first);
+                        std::string tipoCurso = this->extraerTipoCurso(curso.first);
 
                         // Si son del mismo grupo y del mismo tipo de curso, no se pueden llevar en simultaneo
                         // a su vez si no tienen ni tipo ni grupo también se creara aristas
                         if (grupoCursoPivote == grupoCurso && tipoCursoPivote == tipoCurso){
-                            this->grafo->insertarArista(cursoPivote.first, curso.first);
+                            this->grafo.insert_edge(*(cursoPivote.second), *(curso.second));
                         }
 
                         // Si no tiene grupo pero el otro curso si lo tiene, entonces se uniran (arista)
                         if (grupoCursoPivote == ' ' && grupoCurso != ' '){
-                            this->grafo->insertarArista(cursoPivote.first, curso.first);
+                            this->grafo.insert_edge(*(cursoPivote.second), *(curso.second));
                         }
 
                         // si no tiene tipo y el otro si, entonces se uniran (arista)
                         if (tipoCursoPivote == "  " && tipoCurso != "  "){
-                            this->grafo->insertarArista(cursoPivote.first, curso.first);
+                            this->grafo.insert_edge(*(cursoPivote.second), *(curso.second));
                         }
 
                         // LA otra condición es que si tienen el mismo profesor
                         if (cursoPivote.second->profesor == curso.second->profesor && cursoPivote.second->profesor != -1){
-                            this->grafo->insertarArista(cursoPivote.first, curso.first);
+                            this->grafo.insert_edge(*(cursoPivote.second), *(curso.second));
                         }
                     }
 
@@ -291,8 +295,9 @@ public:
 
         }
 
-        this->grafo->colorearHorario(this->paleta);
-        this->grafo->crearArchivoDot();
+        this->grafo.colorize();
+        this->grafo.print_to_console();
+        this->grafo.show_dot("grafo");
 
         return true;
 
